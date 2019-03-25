@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Chat Application</title>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+      *{margin:0;padding:0;box-sizing:border-box;}
+      body{font:13px Helvetica, Arial;}
+      form{background:#000;padding:3px;position:fixed;bottom:10px;width:75%;}
+      form input{border:0;padding:10px;width:90%;margin-right:.5%;}
+      #conversation{list-style-type:none;margin:0;padding:0;}
+      #conversation li{padding:5px 10px;}
+      #conversation li:nth-child(odd){background:#eee;}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <ul id="conversation">
+
+      </ul>
+      <form>
+        <input type="text" name="message" id="message"/> <button  class="btn btn-success" id="btn_send">Send</button>
+      </form>
+    </div>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script type="text/javascript">
+      var socket = io("http://localhost:3000");
+      socket.on("connect",()=>{
+        <!-- Hỏi tên của họ -->
+        var username = prompt("What is your name?");
+        <!-- Gửi lên server username -->
+        socket.emit("adduser",username);
+      });
+      <!-- Nghe sự kiện update_message -->
+      socket.on("update_message",(data)=>{
+        $("#conversation").append("<li><b>" + data.sender + ": </b>" + data.message +  "</li>");
+      });
+      <!-- Bắt sự kiện gửi tin nhắn -->
+      $("#btn_send").click((e)=>{
+        var message = $("#message").val();
+        <!-- Reset type input về rỗng sau khi gửi tin nhắn  -->
+        $("#message").val("");
+        <!-- Gửi lên trên Server -->
+        if(message.trim().length != 0){
+          socket.emit("send_message",message);
+        }
+      });
+      $("form").submit(()=>{
+        return false;
+      });
+    </script>
+  </body>
+</html>

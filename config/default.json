@@ -1,0 +1,22 @@
+/* File nay dùng để cấu hình cho hệ thống 1 cách tự động, chứ không phải
+hash code
+Cần cài đặt module config để app.js nhận được json này
+=> Sau khi cài xong, tên file.json này sẽ đại diện cho môi trường mà ta phát
+triển
+*/
+
+{
+  "server":{
+    "host": "0.0.0.0",
+    "port": 3000
+  },
+  "mysql":{
+    "host" : "localhost",
+    "port" : 3306,
+    "database" : "blog_codeto",
+    "user" : "blog",
+    "password" : "123456"
+  },
+  "salt" : 10,
+  "secret_key" : "secretkey"
+}
